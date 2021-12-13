@@ -13,41 +13,44 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    private UserRepository repositorio;
 
-    public List<User> getAll(){
+    public List<User> getAll() {
         return userRepository.getAll();
     }
 
-    public boolean existEmail(String email){
+    public boolean existEmail(String email) {
         return userRepository.existEmail(email);
     }
 
-    public Optional<User> getUser(int id){
+    public Optional<User> getUser(int id) {
         return userRepository.getUser(id);
     }
 
-    public User authenticateUser(String email, String password){
+    public User authenticateUser(String email, String password) {
         Optional<User> usuario = userRepository.authenticateUser(email, password);
 
-        if(usuario.isEmpty()){                                                            //Si el usuario no existe / vacio crea un objeto usuario vacio
+        if (usuario.isEmpty()) { // Si el usuario no existe / vacio crea un objeto usuario vacio
             return new User();
-        }
-        else{
-            return usuario.get();                                                         //Si no trae el objeto usuario que encuentre
+        } else {
+            return usuario.get(); // Si no trae el objeto usuario que encuentre
         }
     }
-    //Sacado de la tutoria del profe Cristian, gracias profe :)
+
+    // Sacado de la tutoria del profe Cristian, gracias profe :)
     public User create(User user) {
 
-        //obtiene el maximo id existente en la coleccion
+        // obtiene el maximo id existente en la coleccion
         Optional<User> userIdMaximo = userRepository.lastUserId();
 
-        //si el id del Usaurio que se recibe como parametro es nulo, entonces valida el maximo id existente en base de datos
+        // si el id del Usaurio que se recibe como parametro es nulo, entonces valida el
+        // maximo id existente en base de datos
         if (user.getId() == null) {
-            //valida el maximo id generado, si no hay ninguno aun el primer id sera 1
+            // valida el maximo id generado, si no hay ninguno aun el primer id sera 1
             if (userIdMaximo.isEmpty())
                 user.setId(1);
-                //si retorna informacion suma 1 al maximo id existente y lo asigna como el codigo del usuario
+            // si retorna informacion suma 1 al maximo id existente y lo asigna como el
+            // codigo del usuario
             else
                 user.setId(userIdMaximo.get().getId() + 1);
 
@@ -55,42 +58,42 @@ public class UserService {
 
         Optional<User> e = userRepository.getUser(user.getId());
         if (e.isEmpty()) {
-            if (existEmail(user.getEmail()) == false){
+            if (existEmail(user.getEmail()) == false) {
                 return userRepository.create(user);
-            }else{
+            } else {
                 return user;
             }
-        }else{
+        } else {
             return user;
         }
     }
 
-    public User update(User user){
-        if(user.getId() != null){
+    public User update(User user) {
+        if (user.getId() != null) {
             Optional<User> userOptional = userRepository.getUser(user.getId());
-            if(!userOptional.isEmpty()){
-                if(user.getIdentification() != null){
+            if (!userOptional.isEmpty()) {
+                if (user.getIdentification() != null) {
                     userOptional.get().setIdentification(user.getIdentification());
                 }
-                if(user.getName() != null){
+                if (user.getName() != null) {
                     userOptional.get().setName(user.getName());
                 }
-                if(user.getAddress() != null){
+                if (user.getAddress() != null) {
                     userOptional.get().setAddress(user.getAddress());
                 }
-                if(user.getCellPhone() != null){
+                if (user.getCellPhone() != null) {
                     userOptional.get().setCellPhone(user.getCellPhone());
                 }
-                if(user.getEmail() != null){
+                if (user.getEmail() != null) {
                     userOptional.get().setEmail(user.getEmail());
                 }
-                if(user.getPassword() != null){
+                if (user.getPassword() != null) {
                     userOptional.get().setPassword(user.getPassword());
                 }
-                if(user.getZone() != null){
+                if (user.getZone() != null) {
                     userOptional.get().setZone(user.getZone());
                 }
-                if(user.getType() != null) {
+                if (user.getType() != null) {
                     userOptional.get().setType(user.getType());
                 }
 
@@ -100,18 +103,31 @@ public class UserService {
             } else {
                 return user;
             }
-        }else {
+        } else {
             return user;
         }
     }
 
-    public boolean delete(int id){
+    public boolean delete(int id) {
         Optional<User> userOptional = userRepository.getUser(id);
-        if(!userOptional.isEmpty()){
+        if (!userOptional.isEmpty()) {
             userRepository.delete(userOptional.get());
             return true;
         }
         return false;
+
+        /*
+         * Boolean aBoolean = getUser(userId).map(user -> {
+         * repositorio.delete(user);
+         * return true;
+         * }).orElse(false);
+         * return aBoolean;
+         * 
+         */
+    }
+
+    public List<User> birthtDayList(String monthBirthtDay) {
+        return repositorio.birthtDayList(monthBirthtDay);
     }
 
 }

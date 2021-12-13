@@ -18,34 +18,42 @@ public class UserRepository {
         return userCrudRepository.findAll();
     }
 
-    public Optional<User> getUser(int id) {                                              //Buscar por ID para el metodo DELETE
+    public Optional<User> getUser(int id) { // Buscar por ID para el metodo DELETE
         return userCrudRepository.findById(id);
     }
 
-    public Optional<User> lastUserId(){
-        return userCrudRepository.findTopByOrderByIdDesc();
+    public List<User> listAll() {
+        return userCrudRepository.findAll();
     }
 
-    public boolean existEmail(String email){
+    public boolean existEmail(String email) {
         Optional<User> usuario = userCrudRepository.findByEmail(email);
 
         return !usuario.isEmpty();
     }
 
-    public Optional<User> authenticateUser(String email, String password){
+    public Optional<User> authenticateUser(String email, String password) {
         return userCrudRepository.findByEmailAndPassword(email, password);
     }
 
-    public User create(User user){
+    public User create(User user) {
         return userCrudRepository.save(user);
     }
 
-    public void update(User user){
+    public void update(User user) {
         userCrudRepository.save(user);
     }
 
-    public void delete(User user){
+    public void delete(User user) {
         userCrudRepository.delete(user);
+    }
+
+    public Optional<User> lastUserId() {
+        return userCrudRepository.findTopByOrderByIdDesc();
+    }
+
+    public List<User> birthtDayList(String monthBirthtDay) {
+        return userCrudRepository.findByMonthBirthtDay(monthBirthtDay);
     }
 
 }

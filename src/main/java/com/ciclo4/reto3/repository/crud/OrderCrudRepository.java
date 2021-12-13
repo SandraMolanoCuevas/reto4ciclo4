@@ -15,7 +15,6 @@ public interface OrderCrudRepository extends MongoRepository<Order, Integer> {
     @Query("{status: ?0}")
     List<Order> findByStatus(final String status);
 
-    //Para seleccionar la orden con el id maximo
     Optional<Order> findTopByOrderByIdDesc();
 
 }
